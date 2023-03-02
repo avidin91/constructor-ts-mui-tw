@@ -1,0 +1,8 @@
+textarea {
+    margin: 0 auto;
+    resize: none;
+    padding: 10px;
+    border: 1px solid #d1cece;
+    border-radius: 5px;
+    box-shadow: 0 0 5px #7c7c7c inset;
+}
