@@ -1,18 +1,56 @@
 import React from 'react';
-import {Box, Container, FormGroup} from "@mui/material";
-import classes from './ConstructorMaterialUI.module.css';
+import {Box, Button, Container, Switch, TextareaAutosize} from "@mui/material";
+import QuestionMUI from "./Question/QuestionMUI";
+import {useAppDispatch, useAppSelector} from "../../../hooks";
+import {addQuestion, changeTitleText, setTimer} from "../../../store/testConstructorStore/testConstructorSlice";
+
+const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 const ConstructorMaterialUi = () => {
-    return (
-        <Container maxWidth="xl" sx={{paddingTop: 19,}}  className={'border-l border-r border-b-gray-300'}>
-            <p className={classes.title}>Консутруктор тестов</p>
-            <Box className={'border rounded p-5 shadow-2xl m-5 bg-white'}>
-                <p className={classes.name}>Заполните поля для составления теста</p>
-                Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae consequuntur exercitationem expedita libero modi odit suscipit. Consequuntur cum doloribus error esse expedita neque odio officia possimus quidem repellendus, sint velit veritatis, voluptatibus! Aliquid aspernatur blanditiis debitis est eveniet, fugit laudantium molestias neque nobis officia optio quaerat quidem quis quo quos rem sunt veritatis vero voluptatem voluptatibus! Adipisci aliquam, eligendi ex exercitationem facere facilis fugiat harum in iure maiores maxime obcaecati pariatur possimus quae quasi, qui reiciendis repudiandae saepe! Ab dolor in molestias nemo ratione rem voluptatum. Beatae delectus dolore est explicabo harum itaque laborum laudantium libero minima minus neque nihil odit, officia provident quis recusandae sit voluptas? Dignissimos esse rem sed? Amet culpa dolor esse, est in natus officiis placeat? Architecto, aut, corporis cupiditate deleniti dicta distinctio ea eaque eos et expedita harum ipsam iure magnam praesentium recusandae? Adipisci, animi asperiores consequatur cum cumque debitis dicta eum facilis hic laboriosam libero maxime minus nesciunt nulla omnis quibusdam ratione recusandae repellendus sequi tempora temporibus velit voluptatum! Adipisci aliquam asperiores blanditiis, consectetur consequuntur corporis debitis delectus deleniti doloremque dolores dolorum fugit id incidunt inventore laboriosam libero officiis provident, quas quos reiciendis rem sequi similique ullam unde voluptate! A accusantium consectetur quasi quo.
-            </Box>
-            <FormGroup>
+    const testState = useAppSelector((state) => state.testConstructorStore)
+    const dispatch = useAppDispatch();
 
-            </FormGroup>
+    return (
+        <Container maxWidth="xl" sx={{paddingTop: 19, minHeight: '100vh'}}  className={'border-l border-r border-b-gray-300'}>
+            <p className={'text-center font-bold text-3xl'}>Консутруктор тестов</p>
+            <Box className={'border rounded p-5 shadow-2xl m-5 bg-white'}>
+                <p className={'text-center font-bold text-xl'}>Заполните поля для составления теста</p>
+                <Box >
+                    <Box>
+                        <p className={'font-sans'}>Введите название теста</p>
+                        <Box className={'w-1/2'}>
+                            <TextareaAutosize
+                                className={'rounded-md border-gray-300 shadow-sm mt-1 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 w-full'}
+                                minRows={1}
+                                style={{resize: 'none'}}
+                                placeholder={testState.testTitlePlaceholder}
+                                value={testState.testTitleText}
+                                onChange={(event) => dispatch(changeTitleText({text: event.target.value}))}
+                            />
+                        </Box>
+
+                        <Box className={'flex mt-1 mb-5'}>
+                            <Switch {...label}
+                                    checked={testState.forTime}
+                                    onChange={(event) => dispatch(setTimer({checked: event.target.checked}))}
+                                    size="small"/>
+                            <p className={'font-sans'}>Тест на время</p>
+                        </Box>
+                        {testState.questions.map(question => <QuestionMUI
+                        key={question.id}
+                        question={question}
+                        placeholder={testState.testTitlePlaceholder}
+                        title={testState.testTitleText}
+                        numberOfQuestions={testState.questions.length}
+                        />)}
+                    </Box>
+                </Box>
+                <Box className={'text-center mt-5'}>
+                    <Button variant="outlined" color="success"
+                            onClick={() => dispatch(addQuestion())}
+                    >Добавить вопрос</Button>
+                </Box>
+            </Box>
         </Container>
     );
 };

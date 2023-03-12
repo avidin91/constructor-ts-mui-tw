@@ -18,6 +18,7 @@ interface QuestionInterface {
     isTheoreticalPart: boolean,
     theoreticalPartPlaceholderText: string,
     theoreticalPartText: string,
+    timer: number,
     answers: AnswerInterface[],
 }
 
@@ -25,7 +26,6 @@ interface InitialStateInterface {
     testTitleText: string,
     testTitlePlaceholder: string,
     forTime: boolean,
-    timer: number,
     questions: QuestionInterface[]
 }
 
@@ -33,7 +33,6 @@ const initialState: InitialStateInterface = {
     testTitleText: '',
     testTitlePlaceholder: 'Например: «Окружности в математике и геометрии "7 класс"»',
     forTime: false,
-    timer: 0,
     questions: [
         {
             questionText: '',
@@ -44,6 +43,7 @@ const initialState: InitialStateInterface = {
             isTheoreticalPart: false,
             theoreticalPartPlaceholderText: 'Введите текст теоретической части...',
             theoreticalPartText: '',
+            timer: 0,
             answers: [
                 {
                     id: 1,
@@ -69,7 +69,7 @@ const testConstructorSlice = createSlice({
     initialState,
     reducers: {
         // Метод addQuestion меняет состояние, добавляет новый вопрос.
-        addQuestion(state, action) {
+        addQuestion(state) {
             const lastId = state.questions[state.questions.length - 1].id;
             const newId = lastId + 1;
             const newQuestion = {
@@ -81,6 +81,7 @@ const testConstructorSlice = createSlice({
                 isTheoreticalPart: false,
                 theoreticalPartPlaceholderText: 'Введите текст теоретической части...',
                 theoreticalPartText: '',
+                timer: 0,
                 answers: [
                     {
                         id: 1,
@@ -104,7 +105,7 @@ const testConstructorSlice = createSlice({
         // Метод removeQuestion меняет состояние, удаляет вопрос.
         removeQuestion(state, action) {
             const questions = state.questions;
-            const id = +action.payload.tergetId;
+            const id = +action.payload.targetId;
             if (state.questions.length !== 1) {
                 const newQuestions = questions.filter(question => question.id !== id);
 
@@ -125,6 +126,7 @@ const testConstructorSlice = createSlice({
                     isTheoreticalPart: false,
                     theoreticalPartPlaceholderText: 'Введите текст теоретической части...',
                     theoreticalPartText: '',
+                    timer: 0,
                     answers: [
                         {
                             id: 1,
@@ -142,8 +144,7 @@ const testConstructorSlice = createSlice({
 
         // Метод addAnswer меняет состояние, обновляет состояние блока ответов на нажание по кнопке "Добавить ответ"
         addAnswer(state, action) {
-            const questionId = +action.payload;
-            const answers = state.questions[questionId - 1].answers;
+            const answers = state.questions[action.payload.id - 1].answers;
             let lastId;
             if (answers.length === 0) {
                 lastId = 0
@@ -160,7 +161,7 @@ const testConstructorSlice = createSlice({
             };
 
             if (lastId <= 7) {
-                state.questions[questionId - 1].answers.push(newAnswer)
+                state.questions[action.payload.id - 1].answers.push(newAnswer)
             }
         },
 
@@ -191,8 +192,16 @@ const testConstructorSlice = createSlice({
             state.questions[questionId - 1].multipleAnswers = action.payload.checked;
             if (state.questions[questionId - 1].multipleAnswers === true) {
                 state.questions[questionId - 1].typeOfAnswers = 'checkbox'
+                state.questions[questionId - 1].answers.map(answer => {
+                    answer.isCorrect = false;
+                    answer.correctText = 'Неправильный'
+                })
             } else {
                 state.questions[questionId - 1].typeOfAnswers = 'radio'
+                state.questions[questionId - 1].answers.map(answer => {
+                    answer.isCorrect = false;
+                    answer.correctText = 'Неправильный'
+                })
             }
         },
 
@@ -251,9 +260,7 @@ const testConstructorSlice = createSlice({
         },
 
         setTimer(state, action) {
-            console.log('kek')
-            // newTestConstructor.forTime = e.target.checked;
-
+            state.forTime = action.payload.checked;
         },
     },
 })

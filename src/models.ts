@@ -8,3 +8,24 @@ export interface ICatalogue {
     doneQty: number,
     commentsQty: number
 }
+
+export interface AnswerInterface {
+    id: number,
+    placeholderText: string,
+    valueText: string,
+    isCorrect: boolean,
+    correctText: string
+}
+
+export interface QuestionInterface {
+    questionText: string,
+    questionPlaceholder: string,
+    id: number,
+    multipleAnswers: boolean,
+    typeOfAnswers: string,
+    isTheoreticalPart: boolean,
+    theoreticalPartPlaceholderText: string,
+    theoreticalPartText: string,
+    timer: number,
+    answers: AnswerInterface[],
+}

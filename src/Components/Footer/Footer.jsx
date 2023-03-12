@@ -13,7 +13,8 @@ const Footer = () => {
             p: '10px',
             marginTop: '20px',
             justifyContent: 'center',
-            width: 1
+            width: 1,
+
         }}
         className={classes.aaa}
         >

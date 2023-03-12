@@ -16,11 +16,10 @@ function App() {
     return (
         <Box className={'bg-slate-50'}>
             <Header/>
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" sx={{minHeight: '100vh'}}>
                 <Routes>
                     <Route path='/' element={<MainScreen />}/>
-                    <Route path='/tests-constructor' element={<TestsConstructor />}/>
-                    <Route path='/tests' element={<ConstructorMaterialUI />}/>
+                    <Route path='/tests-constructor' element={<ConstructorMaterialUI />}/>
                 </Routes>
             </Container>
             <Footer/>
